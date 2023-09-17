@@ -12,13 +12,14 @@ connectdb();
 const port=process.env.port||8000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());//for json data;
+
  app.use('/',(req,res,next)=>{
-       res.json({name:"jhon"});
-   next();
+       //res.json({name:"jhon"});
+      next();
  })
 app.use('/api/user',userRoutes);
 app.use("/api/asad",(req,res)=>{
-      return res.json({name:"asad"});
+       res.json({name:"asad"});
 })
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);

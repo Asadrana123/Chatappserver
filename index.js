@@ -13,7 +13,7 @@ const port=process.env.port||8000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());//for json data;
  app.use('/',(req,res,next)=>{
-   console.log(req.body);
+      return res.json({name:"jhon"});
    next();
  })
 app.use('/api/user',userRoutes);

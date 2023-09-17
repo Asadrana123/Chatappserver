@@ -17,6 +17,9 @@ app.use(express.json());//for json data;
    next();
  })
 app.use('/api/user',userRoutes);
+app.use("/api/asad",(req,res)=>{
+      return res.json({name:"asad"});
+})
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 //app.use("/api/message", messageRoutes);

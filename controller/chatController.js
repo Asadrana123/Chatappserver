@@ -63,7 +63,6 @@ exports.fetchChat = async (req, res) => {
       users: { $elemMatch: { $eq: req.user } },
     })
       .populate("users")
-      .populate("groupAdmin")
       .populate({
         path:"latestMessage",
         populate:{

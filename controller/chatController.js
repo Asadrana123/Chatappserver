@@ -2,7 +2,6 @@ const ChatModel = require("../Models/chatModel");
 exports.sendNotification = async (req, res) => {
   const chatId = req.body.chatId;
   const value = req.body.value;
-  console.log("hi");
   try{
     const data = await ChatModel.findByIdAndUpdate(chatId,{
       Notification:value,

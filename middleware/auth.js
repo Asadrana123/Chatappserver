@@ -1,18 +1,22 @@
-const jwt = require("jsonwebtoken");
-const verifytoken = async (req, res, next) => {
+import jwt from "jsonwebtoken"; // Ensure you have the correct import for jwt
+
+const verifyToken = async (req, res, next) => {
   const token =
     req.body.token ||
     req.query.token ||
-    req.headers.authorization.split(" ")[1];
+    (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+
   if (!token) {
     return res.status(400).json({ message: "Token needed for authorization" });
   }
+
   try {
-    const verify = jwt.verify(token, process.env.secret);
-    req.user = verify.id;
+    const verified = jwt.verify(token, process.env.secret);
+    req.user = verified.id; // Assuming verified contains the user's id
     next();
   } catch (err) {
-    return res.status(400).json({ err, message: "error occured" });
+    return res.status(400).json({ err, message: "Error occurred" });
   }
 };
-module.exports = verifytoken;
+
+export default verifyToken;

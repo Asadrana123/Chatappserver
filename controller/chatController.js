@@ -1,19 +1,19 @@
-const ChatModel = require("../Models/chatModel");
-exports.sendNotification = async (req, res) => {
+import ChatModel from "../Models/chatModel.js"; // Ensure .js is included for ES module
+
+export const sendNotification = async (req, res) => {
   const chatId = req.body.chatId;
   const value = req.body.value;
-  try{
-    const data = await ChatModel.findByIdAndUpdate(chatId,{
-      Notification:value,
-    },
-    {new:true}
-    )
+  try {
+    const data = await ChatModel.findByIdAndUpdate(chatId, {
+      Notification: value,
+    }, { new: true });
     return res.status(200).json(data);
-  }catch(err){
-       return res.status(400).json({err})
+  } catch (err) {
+    return res.status(400).json({ err });
   }
-}
-exports.acessChat = async (req, res) => {
+};
+
+export const acessChat = async (req, res) => {
   const userId = req.body.userId;
   if (!userId) {
     return res.sendStatus(400);
@@ -24,11 +24,12 @@ exports.acessChat = async (req, res) => {
   })
     .populate("users")
     .populate({
-         path:"latestMessage",
-         populate:{
-            path:"sender"
-         }
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+      },
     });
+  
   if (chat) {
     return res.status(200).json({ chat, message: "alreadyfriend" });
   } else {
@@ -38,36 +39,36 @@ exports.acessChat = async (req, res) => {
         isGroupChat: false,
         users: [req.user, userId],
         Notification: false,
-        latestMessage:null
+        latestMessage: null,
       });
-      const chat = await ChatModel.findOne({
-        _id: createchat._id,
-      })
+
+      const chat = await ChatModel.findOne({ _id: createchat._id })
         .populate("users")
         .populate({
-          path:"latestMessage",
-          populate:{
-             path:"sender"
-          }
-     });
+          path: "latestMessage",
+          populate: {
+            path: "sender",
+          },
+        });
       return res.status(200).json({ chat, message: "newfriend" });
     } catch (error) {
       return res.status(200).json(error);
     }
   }
 };
-exports.fetchChat = async (req, res) => {
+
+export const fetchChat = async (req, res) => {
   try {
     const allChats = await ChatModel.find({
       users: { $elemMatch: { $eq: req.user } },
     })
       .populate("users")
       .populate({
-        path:"latestMessage",
-        populate:{
-           path:"sender"
-        }
-   })
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+        },
+      })
       .sort({ updatedAt: -1 });
     return res.status(200).json(allChats);
   } catch (error) {
@@ -75,12 +76,14 @@ exports.fetchChat = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
-exports.createGroupChat = async (req, res) => {
+
+export const createGroupChat = async (req, res) => {
   if (!req.body.users || !req.body.name) {
     return res.status(400).json({ message: "please fill all the fields" });
   }
   if (req.body.users.length < 2) return res.status(400).json({ message: "Atleast two users required" });
   req.body.users.push(req.user);
+  
   try {
     const group = await ChatModel.create({
       isGroupChat: true,
@@ -89,53 +92,43 @@ exports.createGroupChat = async (req, res) => {
       chatName: req.body.name,
       Notification: false,
     });
-    const createdGroup = await ChatModel.findOne({ _id: group._id }).populate(
-      "users"
-    );
+    const createdGroup = await ChatModel.findOne({ _id: group._id }).populate("users");
     return res.status(200).json({ createdGroup });
   } catch (error) {
     return res.status(400).json({ error });
   }
 };
-exports.renameGroup = async (req, res) => {
+
+export const renameGroup = async (req, res) => {
   const { chatId, chatName } = req.body;
   try {
-    const withNewName = await ChatModel.findByIdAndUpdate(
-      chatId,
-      { chatName },
-      { new: true }
-    ).populate("users");
+    const withNewName = await ChatModel.findByIdAndUpdate(chatId, { chatName }, { new: true }).populate("users");
     return res.send(withNewName);
   } catch (error) {
     return res.send(error);
   }
 };
-exports.addUser = async (req, res) => {
+
+export const addUser = async (req, res) => {
   const { chatId, userId } = req.body;
   console.log(chatId);
+  
   try {
-    const updatedGroup = await ChatModel.findByIdAndUpdate(
-      chatId,
-      {
-        $push: { users: userId },
-      },
-      { new: true }
-    ).populate("users");
+    const updatedGroup = await ChatModel.findByIdAndUpdate(chatId, {
+      $push: { users: userId },
+    }, { new: true }).populate("users");
     return res.send(updatedGroup);
   } catch (error) {
     return res.send(error);
   }
 };
-exports.removeUser = async (req, res) => {
+
+export const removeUser = async (req, res) => {
   const { chatId, userId } = req.body;
   try {
-    const updatedGroup = await ChatModel.findByIdAndUpdate(
-      chatId,
-      {
-        $pull: { users: userId },
-      },
-      { new: true }
-    ).populate("users");
+    const updatedGroup = await ChatModel.findByIdAndUpdate(chatId, {
+      $pull: { users: userId },
+    }, { new: true }).populate("users");
     return res.send(updatedGroup);
   } catch (error) {
     return res.send(error);

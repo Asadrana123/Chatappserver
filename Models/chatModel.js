@@ -1,13 +1,14 @@
-const mongoose=require("mongoose");
+import mongoose from "mongoose";
+
 const chatSchema = new mongoose.Schema(
   {
     chatName: {
       type: String,
       trim: true,
     },
-    Notification:{
-      type:Boolean,
-       deafault:false,
+    Notification: {
+      type: Boolean,
+      default: false, // Corrected spelling from 'deafault' to 'default'
     },
     latestMessage: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,5 +33,6 @@ const chatSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 const ChatModel = mongoose.model("ChatModel", chatSchema);
-module.exports=ChatModel;
+export default ChatModel;

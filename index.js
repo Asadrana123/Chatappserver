@@ -5,12 +5,18 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
-import fetch from "node-fetch";
 import connectdb from "./Config/db.js"; // Ensure your db.js is also an ESM file
 // Polyfill fetch for environments that don't support it
+import fetch, { Headers } from 'node-fetch';
+
 if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
+
+if (!globalThis.Headers) {
+  globalThis.Headers = Headers;
+}
+
 
 // Initialize dotenv configuration
 

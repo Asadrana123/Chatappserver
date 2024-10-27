@@ -38,6 +38,7 @@ exports.sendMessageToAIController = async (req, res) => {
 };
 exports.getMessagefromAIcontrolller=async(req,res)=>{
   const chatId = req.body.chatId;
+  console.log(req.body.content);
   try{
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });

@@ -6,7 +6,6 @@ exports.sendMessageToAIController = async (req, res) => {
   const chatId = req.body.chatId;
   const message = req.body.content;
   const sender = req.user;
-  console.log(sender);
   try {
     const result = await messageModel.create({
       chat: chatId,

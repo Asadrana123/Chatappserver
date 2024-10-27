@@ -5,9 +5,6 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
-if (!global.fetch) {
-  global.fetch = require('node-fetch');
-}
 dotenv.config();
 app.use(cors());
 const connectdb = require("./Config/db");
